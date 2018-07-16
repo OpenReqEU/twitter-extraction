@@ -40,8 +40,8 @@ def tokenize_requirements(requirements, important_key_words):
 
     '''
     _logger.info("Tokenizing requirements")
-    assert isinstance(requirements, list)
-    assert isinstance(important_key_words, list)
+    assert(isinstance(requirements, list))
+    assert(isinstance(important_key_words, list))
     sorted_important_key_words_to_keep = sorted(important_key_words, reverse=True)
 
     regex_str = [
@@ -57,7 +57,7 @@ def tokenize_requirements(requirements, important_key_words):
     tokens_ignore_re = re.compile(r'(' + '|'.join(regex_str) + ')', re.VERBOSE | re.IGNORECASE)
 
     # regex to split/tokenize by key words
-    regex_str = map(lambda word: '\s' + re.escape(word) + '\W', sorted_important_key_words_to_keep)
+    regex_str = map(lambda word: '\s' + re.escape(str(word)) + '\W', sorted_important_key_words_to_keep)
     split_important_words_re = re.compile(r'(' + '|'.join(regex_str) + ')', re.VERBOSE | re.IGNORECASE)
     last_char_is_no_alphanum_re = re.compile(r'(\W)', re.VERBOSE | re.IGNORECASE)
 
@@ -67,10 +67,10 @@ def tokenize_requirements(requirements, important_key_words):
                 Only looks and tokenizes for important words.
                 The rest remains untokenized.
             '''
-            assert len(sorted_important_words_to_keep) > 0
+            assert(len(sorted_important_words_to_keep) > 0)
             new_chunks = []
             for chunk in chunks:
-                assert isinstance(chunk, (str, unicode))
+                assert(isinstance(chunk, str))
                 # case: chunk is a tag (i.e. chunk == tag_X)
                 if chunk.strip() in sorted_important_words_to_keep:
                     new_chunks.append(chunk)
@@ -106,7 +106,7 @@ def tokenize_requirements(requirements, important_key_words):
             # now tokenize all other words!
             final_tokens = []
             for token in tokens:
-                assert isinstance(token, (str, unicode))
+                assert(isinstance(token, str))
                 # case: token is an important word (i.e. already tokenized) -> do no further tokenization!
                 if token in sorted_important_words_to_keep:
                     final_tokens.append(token)
@@ -132,13 +132,14 @@ def tokenize_requirements(requirements, important_key_words):
 
         # pre- and append single whitespace character before and at the end of the string
         # This really makes the regular expressions a bit less complex
-        s = unicode(' %s ' % s.lower()) # also lower case all letters
+        s = ' {} '.format(s.lower()) # also lower case all letters
 
         # remove unicode characters
         s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore')
 
         # manually replace those emoticons/smilies not handled by regex:
-        s = s.replace(':d', '')
+        s = str(s)
+        s = s.replace(":d", "")
         s = s.replace(':p', '')
         s = s.replace(':-d', '')
         s = s.replace(':-p', '')
@@ -158,9 +159,9 @@ def tokenize_requirements(requirements, important_key_words):
         # finally remove empty tokens
         return filter(lambda t: len(t) > 0, tokens)
 
-    progress_bar = helper.ProgressBar(len(requirements))
+    #progress_bar = helper.ProgressBar(len(requirements))
     for requirement in requirements:
         requirement.title_tokens = _tokenize_text(requirement.title, sorted_important_key_words_to_keep, split_important_words_re)
         requirement.description_tokens = _tokenize_text(requirement.description, sorted_important_key_words_to_keep, split_important_words_re)
-        progress_bar.update()
-    progress_bar.finish()
+        #progress_bar.update()
+    #progress_bar.finish()

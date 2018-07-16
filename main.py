@@ -12,7 +12,6 @@
 '''
 
 import sys
-import json
 import twitter
 
 #TODO: Calls are limited / Sth like 180 calls/day

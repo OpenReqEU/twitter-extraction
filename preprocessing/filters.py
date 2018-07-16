@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from entities.requirement import Requirement
 import logging, re, os
 from util import helper
-#from bs4 import BeautifulSoup  # @UnresolvedImport
 
 _logger = logging.getLogger(__name__)
 emoticons_data_file = os.path.join(helper.APP_PATH, "corpora", "emoticons", "emoticons")
@@ -133,13 +131,13 @@ def filter_tokens(requirements, important_key_words):
         # remove empty tokens
         return filter(lambda t: len(t) > 0, tokens)
 
-    progress_bar = helper.ProgressBar(len(requirements))
+    #progress_bar = helper.ProgressBar(len(requirements))
 
     for requirement in requirements:
         requirement.title_tokens = _filter_tokens(requirement.title_tokens, important_key_words)
         requirement.description_tokens = _filter_tokens(requirement.description_tokens, important_key_words)
-        progress_bar.update()
-    progress_bar.finish()
+        #progress_bar.update()
+    #progress_bar.finish()
 
 
 def filter_less_relevant_posts(posts, score_threshold):

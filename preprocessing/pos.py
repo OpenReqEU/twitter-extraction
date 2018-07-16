@@ -125,7 +125,7 @@ def pos_tagging(requirements):
         VVIZU	infinitive with incorporated zu	sie versprach aufzuhören
         VVPP	past participle of full verb	sie ist gekommen
     '''
-    progress_bar = helper.ProgressBar(len(requirements))
+    #progress_bar = helper.ProgressBar(len(requirements))
     pos_tags_black_list = ['CC', 'CD', 'DT', 'EX', 'IN', 'LS', 'MD', 'PDT', 'POS', 'PRP', 'PRP$', 'RP', 'TO', 'UH', 'VBZ', 'WDT', 'WP', 'WP$', 'WRB']
     #pos_tags_black_list = ['CC', 'CD', 'DT', 'EX', 'LS', 'MD', 'PDT', 'POS', 'PRP', 'PRP$', 'RP', 'TO', 'UH', 'WDT', 'WP', 'WP$', 'WRB']
     existing_stanford_pos_tags = set()
@@ -153,6 +153,6 @@ def pos_tagging(requirements):
         requirement.title_tokens_pos_tags = map(lambda t: t, pos_tagged_title_tokens)
         #removed_stanford_tokens |= set(filter(lambda t: t[1] in pos_tags_black_list, pos_tagged_title_tokens))
         #existing_stanford_pos_tags |= set(map(lambda t: t[1], pos_tagged_title_tokens))
-        progress_bar.update()
+        #progress_bar.update()
 
-    progress_bar.finish()
+    #progress_bar.finish()

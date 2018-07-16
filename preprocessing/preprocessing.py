@@ -4,12 +4,13 @@ import logging
 import os, csv
 from entities.requirement import Requirement
 from util import helper
-import tokenizer
-import filters
-import stopwords
-import stemmer
-import pos
-import lemmatizer
+from functools import reduce
+from preprocessing import tokenizer
+from preprocessing import filters
+from preprocessing import stopwords
+from preprocessing import stemmer
+from preprocessing import pos
+from preprocessing import lemmatizer
 
 _logger = logging.getLogger(__name__)
 
@@ -46,23 +47,23 @@ def replace_adjacent_token_synonyms_and_remove_adjacent_stopwords(posts):
             source_token_parts = source_token_ngram.split()
             target_token_parts = row[0].strip().split()
             if len(source_token_parts) == 1:
-                assert row[1] not in token_replacement_map_unigram, "Synonym entry '%s' is ambiguous." % row[1]
+                assert(row[1] not in token_replacement_map_unigram, "Synonym entry '%s' is ambiguous." % row[1])
                 token_replacement_map_unigram[source_token_ngram] = target_token_parts
             elif len(source_token_parts) == 2:
-                assert row[1] not in token_replacement_map_bigram, "Synonym entry '%s' is ambiguous." % row[1]
+                assert(row[1] not in token_replacement_map_bigram, "Synonym entry '%s' is ambiguous." % row[1])
                 token_replacement_map_bigram[source_token_ngram] = target_token_parts
             elif len(source_token_parts) == 3:
-                assert row[1] not in token_replacement_map_trigram, "Synonym entry '%s' is ambiguous." % row[1]
+                assert(row[1] not in token_replacement_map_trigram, "Synonym entry '%s' is ambiguous." % row[1])
                 token_replacement_map_trigram[source_token_ngram] = target_token_parts
             else:
-                assert False, "Invalid entry in synonyms list! Only supported: unigrams, bigrams, trigrams"
+                assert(False, "Invalid entry in synonyms list! Only supported: unigrams, bigrams, trigrams")
 
     n_replacements_total = 0
     for post in posts:
-        assert isinstance(post, Post)
+        assert(isinstance(post, Post))
 
         def _replace_token_list_synonyms(tokens, token_replacement_map, n_gram=1):
-            assert isinstance(tokens, list)
+            assert(isinstance(tokens, list))
             n_replacements = 0
             if len(tokens) < n_gram:
                 return (tokens, n_replacements)
@@ -91,12 +92,12 @@ def replace_adjacent_token_synonyms_and_remove_adjacent_stopwords(posts):
         # title tokens
         tokens = post.title_tokens
         tokens, n_replacements_trigram = _replace_token_list_synonyms(tokens, token_replacement_map_trigram, n_gram=3)
-        assert isinstance(tokens, list)
+        assert(isinstance(tokens, list))
         tokens, n_replacements_bigram = _replace_token_list_synonyms(tokens, token_replacement_map_bigram, n_gram=2)
         tokens, n_replacements_unigram = _replace_token_list_synonyms(tokens, token_replacement_map_unigram, n_gram=1)
         # adjacent stop words have been replaced with empty string! -> remove empty tokens now!
         tokens = filter(lambda t: len(t) > 0, tokens)
-        post.title_tokens = tokens
+        post.title_tokens = list(tokens)
         n_replacements_total += n_replacements_trigram + n_replacements_bigram + n_replacements_unigram
 
         # body tokens
@@ -106,7 +107,7 @@ def replace_adjacent_token_synonyms_and_remove_adjacent_stopwords(posts):
         tokens, n_replacements_unigram = _replace_token_list_synonyms(tokens, token_replacement_map_unigram, n_gram=1)
         # adjacent stop words have been replaced with empty string! -> remove empty tokens now!
         tokens = filter(lambda t: len(t) > 0, tokens)
-        post.body_tokens = tokens
+        post.body_tokens = list(tokens)
         n_replacements_total += n_replacements_trigram + n_replacements_bigram + n_replacements_unigram
 
     _logger.info("Found and replaced %s synonym tokens", n_replacements_total)
@@ -115,7 +116,7 @@ def replace_adjacent_token_synonyms_and_remove_adjacent_stopwords(posts):
 def _to_lower_case(requirements):
     _logger.info("Lower case requirement title and description")
     for requirement in requirements:
-        assert isinstance(requirement, Requirement)
+        assert(isinstance(requirement, Requirement))
         requirement.title = requirement.title.lower()
         requirement.description = requirement.description.lower()
 
@@ -123,7 +124,7 @@ def _to_lower_case(requirements):
 def _replace_german_umlauts(requirements):
     _logger.info("Replace umlauts")
     for requirement in requirements:
-        assert isinstance(requirement, Requirement)
+        assert(isinstance(requirement, Requirement))
         requirement.title = helper.replace_german_umlaut(requirement.title)
         requirement.description = helper.replace_german_umlaut(requirement.description)
 
@@ -131,17 +132,18 @@ def _replace_german_umlauts(requirements):
 def _remove_abbreviations(requirements):
     _logger.info("Remove abbreviations")
     for requirement in requirements:
-        assert isinstance(requirement, Requirement)
+        assert(isinstance(requirement, Requirement))
         requirement.title = requirement.title.replace('z.b.', '')
         requirement.description = requirement.description.replace('z.b.', '')
 
 
 def preprocess_requirements(requirements, enable_pos_tagging=False, enable_lemmatization=False, enable_stemming=False):
     _logger.info("Preprocessing requirements")
-    assert not enable_lemmatization or enable_pos_tagging, "Lemmatization enabled but POS tagging not! Lemmatization requires POS tagging!"
-    assert not enable_lemmatization or not enable_stemming, "Lemmatization and Stemming are both enabled! Using both is not meaningful!"
-    assert isinstance(requirements, list)
-    assert len(requirements) > 0, "No requirements given. All requirements have been filtered out. Please check your parameters!"
+    requirements = list(requirements)
+    assert(not enable_lemmatization or enable_pos_tagging, "Lemmatization enabled but POS tagging not! Lemmatization requires POS tagging!")
+    assert(not enable_lemmatization or not enable_stemming, "Lemmatization and Stemming are both enabled! Using both is not meaningful!")
+    assert(isinstance(requirements, list))
+    assert(len(requirements) > 0, "No requirements given. All requirements have been filtered out. Please check your parameters!")
 
     _to_lower_case(requirements)
     _replace_german_umlauts(requirements)
@@ -150,7 +152,7 @@ def preprocess_requirements(requirements, enable_pos_tagging=False, enable_lemma
     important_key_words = tokenizer.key_words_for_tokenization(all_requirement_titles)
     _logger.info("Number of key words {} (altogether)".format(len(important_key_words)))
     tokenizer.tokenize_requirements(requirements, important_key_words)
-    n_tokens = reduce(lambda x, y: x + y, map(lambda t: len(t.title_tokens) + len(t.description_tokens), requirements))
+    n_tokens = reduce(lambda x, y: x + y, map(lambda t: len(list(t.title_tokens)) + len(list(t.description_tokens)), requirements))
     filters.filter_tokens(requirements, important_key_words)
     stopwords.remove_stopwords(requirements)
 
@@ -178,7 +180,7 @@ def preprocess_requirements(requirements, enable_pos_tagging=False, enable_lemma
         _logger.warn("Stemming enabled!")
         stemmer.porter_stemmer(requirements)
 
-    n_filtered_tokens = n_tokens - reduce(lambda x, y: x + y, map(lambda t: len(t.title_tokens) + len(t.description_tokens), requirements))
+    n_filtered_tokens = n_tokens - reduce(lambda x, y: x + y, map(lambda t: len(list(t.title_tokens)) + len(list(t.description_tokens)), requirements))
     if n_tokens > 0:
         _logger.info("Removed {} ({}%) of {} tokens (altogether)".format(n_filtered_tokens,
                         round(float(n_filtered_tokens) / n_tokens * 100.0, 2), n_tokens))

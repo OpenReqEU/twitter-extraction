@@ -41,7 +41,7 @@ def word_net_lemmatizer(requirements):
         elif stanford_tag.startswith('RB'):
             return wordnet.ADV
         else:
-            print stanford_tag
+            print(stanford_tag)
             return ''
 
     # Funkmodule (NN) -> Funkmodul

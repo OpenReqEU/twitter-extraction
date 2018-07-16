@@ -21,9 +21,9 @@ def remove_stopwords(requirements):
 
     stop_words = set(stopwords.words('english') + list(data_set_stop_words))
 
-    progress_bar = helper.ProgressBar(len(requirements))
+    #progress_bar = helper.ProgressBar(len(requirements))
     for requirement in requirements:
         requirement.title_tokens = filter(lambda t: t not in stop_words, requirement.title_tokens)
         requirement.description_tokens = filter(lambda t: t not in stop_words, requirement.description_tokens)
-        progress_bar.update()
-    progress_bar.finish()
+        #progress_bar.update()
+    #progress_bar.finish()
