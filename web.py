@@ -11,7 +11,7 @@ from preprocessing import preprocessing
 app = Flask(__name__)
 
 # python .\web.py flask run
-# http://127.0.0.1:9001/popularity/hashtag/test
+# http://0.0.0.0:9001/popularity/hashtag
 
 
 @app.route("/popularity/hashtag/", methods=['GET', 'POST'])
