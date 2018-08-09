@@ -1,0 +1,80 @@
+---
+swagger: "2.0"
+info:
+  description: "Twitter Social Popularity Service"
+  version: "1.0.0"
+  title: "Twitter Social Popularity Service"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "rsamer@ist.tugraz.at"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "217.172.12.199"
+basePath: "/v1"
+tags:
+- name: "popularity"
+  description: "Social popularity service"
+schemes:
+- "http"
+paths:
+  /popularity:
+    post:
+      tags:
+      - "hashtag"
+      summary: "Retrieve a list with values for given set of requirements indicating\
+        \ their popularity for the crowd on twitter."
+      description: ""
+      operationId: "compute_popularity"
+      consumes:
+      - "application/json"
+      - "application/xml"
+      produces:
+      - "application/json"
+      - "application/xml"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Requirement objects for which the social popularity should be\
+          \ measured"
+        required: true
+        schema:
+          type: "array"
+          items:
+            $ref: "#/definitions/Requirement"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/RequirementPopularity"
+        405:
+          description: "Invalid input"
+      x-swagger-router-controller: "application.controllers.hashtag_controller"
+definitions:
+  Requirement:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      title:
+        type: "string"
+      description:
+        type: "string"
+    xml:
+      name: "requirement"
+  RequirementPopularity:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      popularity:
+        type: "number"
+    example:
+      popularity: 6.027
+      id: 1
+    xml:
+      name: "apiresponse"
