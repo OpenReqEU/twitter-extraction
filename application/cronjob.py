@@ -19,7 +19,7 @@ try:
             input_data[project_id] = []
         input_data[project_id] += [{ "id": str(requirement_id), "title": title, "description": description }]
 except:
-    print "Error: unable to fetch data"
+    print("Error: unable to fetch data")
     db.close()
     sys.exit(-1)
 
@@ -27,7 +27,7 @@ db.close()
 
 for (project_id, input_dat) in input_data.iteritems():
     print(input_dat)
-    r = requests.post("http://localhost:5000/popularity/hashtag/", json=input_dat)
+    r = requests.post("http://localhost:9005/popularity/hashtag/", json=input_dat)
     if r.status_code == 200:
         result = r.json()
         print(result)
