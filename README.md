@@ -56,13 +56,13 @@ docker run -p 9005:9005 application
 Once the server is running, open your browser and call the following URL to see the API documentation:
 
 ```
-http://217.172.12.199:9005/ui/
+http://217.172.12.199:9005/v1/ui/
 ```
 
 The Swagger definition lives here:
 
 ```
-http://217.172.12.199:9005/swagger.json
+http://217.172.12.199:9005/v1/swagger.json
 ```
 
 ### Notes for developers
