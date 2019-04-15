@@ -58,7 +58,7 @@ def compute_popularity(body):  # noqa: E501
         content = connexion.request.get_json()
         assert isinstance(content, list)
         requirements = [Requirement.from_dict(d) for d in content]  # noqa: E501
-        requirements = map(lambda r: requirement.Requirement(r.id, r.title, r.description), requirements)
+        requirements = list(map(lambda r: requirement.Requirement(r.id, r.title, r.description), requirements))
         requirements = preprocessing.preprocess_requirements(requirements,
                                                              enable_pos_tagging=True,
                                                              enable_lemmatization=False,
@@ -67,15 +67,15 @@ def compute_popularity(body):  # noqa: E501
 
         maut_results = []
         for requ in requirements:
-            print(requ)
             maut_temp = 0
             if len(list(requ.title_tokens_pos_tags)) > 0:
-                for tag in requ.title_tokens_pos_tags:
-                    for matching_pos_classes in ["NN", "NE", "FW"]:
+                for tag in set(requ.title_tokens_pos_tags + requ.description_tokens_pos_tags):
+                    for matching_pos_classes in ["NN", "NNS", "NE", "FW"]:
                         if matching_pos_classes in tag:
                             maut_temp += fetch_twitter(str(tag[0]))
             else:
-                for token in requ.title:
+                for token in set(requ.title_tokens + requ.description_tokens):
+                    print("Note here!!")
                     maut_temp += fetch_twitter(token)
             maut_results.append(maut_temp)
 

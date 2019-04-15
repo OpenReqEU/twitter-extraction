@@ -20,7 +20,7 @@ def is_int_or_float(str_value):
 
 
 def int_or_float_from_string(str_value):
-    assert isinstance(str_value, (str, unicode))
+    assert isinstance(str_value, str)
     try:
         value = int(str_value)
     except ValueError:

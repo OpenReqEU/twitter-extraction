@@ -132,7 +132,7 @@ def filter_tokens(requirements, important_key_words):
         tokens = map(lambda t: t.strip(), tokens)
 
         # remove empty tokens
-        return filter(lambda t: len(t) > 0, tokens)
+        return list(filter(lambda t: len(t) > 0, tokens))
 
     for requirement in requirements:
         requirement.title_tokens = _filter_tokens(requirement.title_tokens, important_key_words)

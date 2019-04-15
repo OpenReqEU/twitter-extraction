@@ -158,7 +158,7 @@ def tokenize_requirements(requirements, important_key_words):
         tokens = map(remove_all_tailing_punctuation_characters, tokens)
 
         # finally remove empty tokens
-        return filter(lambda t: len(t) > 0, tokens)
+        return list(filter(lambda t: len(t) > 0 and t != "b", tokens))
 
     for requirement in requirements:
         requirement.title_tokens = _tokenize_text(requirement.title, sorted_important_key_words_to_keep, split_important_words_re)

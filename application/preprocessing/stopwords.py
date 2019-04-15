@@ -23,6 +23,6 @@ def remove_stopwords(requirements):
     stop_words = set(stopwords.words('english') + list(data_set_stop_words))
 
     for requirement in requirements:
-        requirement.title_tokens = filter(lambda t: t not in stop_words, requirement.title_tokens)
-        requirement.description_tokens = filter(lambda t: t not in stop_words, requirement.description_tokens)
+        requirement.title_tokens = list(filter(lambda t: t not in stop_words, requirement.title_tokens))
+        requirement.description_tokens = list(filter(lambda t: t not in stop_words, requirement.description_tokens))
 

@@ -142,10 +142,10 @@ def _remove_abbreviations(requirements):
 def preprocess_requirements(requirements, enable_pos_tagging=False, enable_lemmatization=False, enable_stemming=False):
     _logger.info("Preprocessing requirements")
     requirements = list(requirements)
-    assert(not enable_lemmatization or enable_pos_tagging, "Lemmatization enabled but POS tagging not! Lemmatization requires POS tagging!")
-    assert(not enable_lemmatization or not enable_stemming, "Lemmatization and Stemming are both enabled! Using both is not meaningful!")
-    assert(isinstance(requirements, list))
-    assert(len(requirements) > 0, "No requirements given. All requirements have been filtered out. Please check your parameters!")
+    assert not enable_lemmatization or enable_pos_tagging, "Lemmatization enabled but POS tagging not! Lemmatization requires POS tagging!"
+    assert not enable_lemmatization or not enable_stemming, "Lemmatization and Stemming are both enabled! Using both is not meaningful!"
+    assert isinstance(requirements, list)
+    assert len(requirements) > 0, "No requirements given. All requirements have been filtered out. Please check your parameters!"
 
     _to_lower_case(requirements)
     _replace_german_umlauts(requirements)
