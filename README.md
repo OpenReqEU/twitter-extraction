@@ -65,6 +65,8 @@ The Swagger definition lives here:
 http://217.172.12.199:9005/v1/swagger.json
 ```
 
+[Rendered Documentation](https://api.openreq.eu/#/services/twitter-extraction)
+
 ### Notes for developers
 None.
 
