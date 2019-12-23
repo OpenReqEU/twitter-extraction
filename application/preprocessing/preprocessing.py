@@ -49,16 +49,11 @@ def replace_adjacent_token_synonyms_and_remove_adjacent_stopwords(posts):
             source_token_parts = source_token_ngram.split()
             target_token_parts = row[0].strip().split()
             if len(source_token_parts) == 1:
-                #assert(row[1] not in token_replacement_map_unigram, "Synonym entry '%s' is ambiguous." % row[1])
                 token_replacement_map_unigram[source_token_ngram] = target_token_parts
             elif len(source_token_parts) == 2:
-                #assert(row[1] not in token_replacement_map_bigram, "Synonym entry '%s' is ambiguous." % row[1])
                 token_replacement_map_bigram[source_token_ngram] = target_token_parts
             elif len(source_token_parts) == 3:
-                #assert(row[1] not in token_replacement_map_trigram, "Synonym entry '%s' is ambiguous." % row[1])
                 token_replacement_map_trigram[source_token_ngram] = target_token_parts
-            #else:
-            #    assert(False, "Invalid entry in synonyms list! Only supported: unigrams, bigrams, trigrams")
 
     n_replacements_total = 0
     for post in posts:
